@@ -137,7 +137,7 @@ function makeNewShaderProgram(gl, fragmentShaderSource) {
 }
 
 // Entry point to application
-function main() {
+async function main() {
   // Get WebGL context
   const shaderName = "shader1";
 
@@ -167,20 +167,20 @@ function main() {
     headers: headers
   };
 
-  fetch(shaderName + ".glsl", config)
-    .then((response) => {
-      // Process shader source code
-      response.text().then((text) => {
-        const shaderProgram = makeNewShaderProgram(gl, text);
-        const VBO = initBuffer(gl);
-        requestAnimationFrame(render.bind({
-          shaderProgram: shaderProgram,
-          glContext: gl,
-          VBO: VBO
-        }))
-      });
-    })
-    .catch((error => {
-      console.log(error);
-    }))
+  try {
+    const response = await fetch(shaderName + ".glsl", config);
+    const shaderText = await response.text();
+    const shaderProgram = makeNewShaderProgram(gl, shaderText);
+    const VBO = initBuffer(gl);
+    requestAnimationFrame(render.bind({
+      shaderProgram: shaderProgram,
+      glContext: gl,
+      VBO: VBO
+    }));
+
+    // Set canvas text to shader
+    editor.setValue(shaderText);
+  } catch (error) {
+    console.log(error);
+  }
 }

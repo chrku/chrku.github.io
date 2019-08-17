@@ -3,7 +3,6 @@
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
   font-family: monospace;
-  height: 300px;
   color: black;
   direction: ltr;
 }
@@ -24,7 +23,6 @@
 /* GUTTER */
 
 .CodeMirror-gutters {
-  border-right: 1px solid #ddd;
   background-color: #f7f7f7;
   white-space: nowrap;
 }
