@@ -39,12 +39,12 @@ function glLinkError(error) {
 
 function drawScene(time, gl, shaderProgram, VBO) {
   // Clear before drawing
-  gl.clearColor(1.0, 0.0, 0.0, 1);
+  gl.clearColor(0.0, 0.0, 0.0, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   // Get orthographic projection matrix
   const projection = mat4.create();
-  mat4.ortho(projection, -10, 10, -10, 10, -10, 10);
+  mat4.ortho(projection, -1, 1, -1, 1, -1, 1);
 
   // Create model matrix (identity)
   const model = mat4.create();
@@ -142,6 +142,13 @@ function main() {
   const shaderName = "shader1";
 
   const canvas = document.getElementById(shaderName);
+  const area = document.getElementById("editor");
+
+  const editor = CodeMirror.fromTextArea(area, {
+    lineNumbers: true,
+    mode: "glsl"
+  });
+
   const gl = canvas.getContext("webgl");
 
   if (gl === null) {

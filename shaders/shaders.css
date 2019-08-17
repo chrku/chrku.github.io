@@ -1,0 +1,42 @@
+html, body, .container {
+    height: 100%;
+}
+
+.root {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  justify-content: center;
+  align-content: center;
+}
+
+.editor-pane {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  width: 75%;
+  height: 50%;
+}
+
+.CodeMirror {
+  width: 49%;
+  height: 100%;
+  resize: none;
+  margin: auto;
+  padding-left: 1%;
+  border: 1px dotted lightgrey;
+}
+
+.option-pane {
+  padding-top: 10px;
+  margin: auto;
+}
+
+.display-element {
+  width: 49%;
+  height: 100%;
+  margin: auto;
+  padding-right: 1%;
+}
