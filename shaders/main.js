@@ -15,6 +15,14 @@ const vertexShaderSource = `
   }
 `;
 
+// This documents the current fragment shader source
+// Since this is editable by users, it needs a flag to check if it
+// is still up to date
+let shaderSourceChanged = false;
+
+// Records the current valid shader program
+let currentShaderProgram = null;
+
 // Coordinates for a square plane
 const squareCoords = [
   -1.0, 1.0,
@@ -23,9 +31,16 @@ const squareCoords = [
   1.0, -1.0
 ];
 
+let editor = null;
+
 // Display error if no WebGL support
 function glNotSupported() {
 
+}
+
+// Recompile shader
+function recompileShader() {
+  shaderSourceChanged = true;
 }
 
 // Display error if shader could not be compiled
@@ -79,12 +94,22 @@ function drawScene(time, gl, shaderProgram, VBO) {
 function render(time) {
   // The GL context is bound to the function
   const gl = this.glContext;
-  const shaderProgram = this.shaderProgram;
   const VBO = this.VBO;
   // Convert time to seconds
   time *= 0.001;
 
-  drawScene(time, gl, shaderProgram, VBO);
+  // Check if the shader source changed since last render
+  if (shaderSourceChanged) {
+    // Try recompiling new shaders
+    const currentShaderSource = editor.getValue();
+    const newProgram = makeNewShaderProgram(gl, vertexShaderSource, currentShaderSource);
+    if (newProgram) {
+      currentShaderProgram = newProgram;
+    }
+    shaderSourceChanged = false;
+  }
+
+  drawScene(time, gl, currentShaderProgram, VBO);
 
   requestAnimationFrame(render.bind(this));
 }
@@ -115,9 +140,9 @@ function initBuffer(gl) {
   return vertexBuffer;
 }
 
-function makeNewShaderProgram(gl, fragmentShaderSource) {
-  const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-  const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+function makeNewShaderProgram(gl, vertexShaderSrc, fragmentShaderSrc) {
+  const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vertexShaderSrc);
+  const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSrc);
 
   // Create shader program
   if (vertexShader && fragmentShader) {
@@ -142,13 +167,6 @@ async function main() {
   const shaderName = "shader1";
 
   const canvas = document.getElementById(shaderName);
-  const area = document.getElementById("editor");
-
-  const editor = CodeMirror.fromTextArea(area, {
-    lineNumbers: true,
-    mode: "glsl"
-  });
-
   const gl = canvas.getContext("webgl");
 
   if (gl === null) {
@@ -167,13 +185,26 @@ async function main() {
     headers: headers
   };
 
+  // Reference to text area for changing the shader
+  const area = document.getElementById("editor");
+  editor = CodeMirror.fromTextArea(area, {
+    lineNumbers: true,
+    mode: "glsl"
+  });
+
   try {
+    // Fetch default shader
     const response = await fetch(shaderName + ".glsl", config);
     const shaderText = await response.text();
-    const shaderProgram = makeNewShaderProgram(gl, shaderText);
+
+    // Create program, set globals
+    currentShaderProgram = makeNewShaderProgram(gl, vertexShaderSource, shaderText);
+
+    // Create VBO for default object (this won't change)
     const VBO = initBuffer(gl);
+
+    // Start rendering
     requestAnimationFrame(render.bind({
-      shaderProgram: shaderProgram,
       glContext: gl,
       VBO: VBO
     }));
