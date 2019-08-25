@@ -13,6 +13,12 @@ header, main {
   align-content: center;
 }
 
+@media handheld {
+  header, main {
+    width: 100%;
+  }
+}
+
 label {
   display: inline-block;
   padding-bottom: 2px;
