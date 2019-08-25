@@ -2,22 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+  <title>Fragment shaders</title>
     <link rel="stylesheet" href="shaders.css">
     <link rel="stylesheet" href="lib/codemirror.css">
 </head>
 <body>
   <script src="lib/codemirror.js"></script>
+  <script src="lib/clike.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
   <script src="main.js"></script>
-  <div class="root">
-    <div class="editor-pane">
+  <!-- Title and description of the app go here-->
+  <header>
+    <h1>Some of my fragment shaders</h1>
+    <p>
+      This is a little showcase I made to show some fragment shaders I wrote; most of them
+      solutions for exercises for the excellent <a href="https://thebookofshaders.com">Book of Shaders </a>.
+      <br/>
+      The shaders are rendered using WebGL and Javascript; I also use the glmatrix library for linear algebra.
+      <br/>
+      The code is editable live and the preview will be updated once the Compile button below is activated.
+      A view below the preview shows uniforms and their values.
+    </p>
+  </header>
+  <main>
+    <label for="shader-selector">Select the fragment shader to be showcased:</label>
+    <select id="shader-selector"> </select>
+    <p id="description"></p>
+    <div class="main-pane">
+      <div class="preview-pane">
+        <label for="shader1">Preview of shader:</label>
         <canvas id="shader1" class="display-element"></canvas>
+        <ul id="uniform-list">
+        </ul>
+      </div>
+      <div class="editor-pane">
+        <label for="editor">Edit shader code:</label>
         <textarea id="editor"></textarea>
+        <p id="error-display"></p>
+      </div>
     </div>
     <div class="option-pane">
       <button onClick="recompileShader()"> Compile</button>
     </div>
-    </div>
+  </main>
 </body>
 </html>

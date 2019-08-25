@@ -164,37 +164,34 @@ function makeNewShaderProgram(gl, vertexShaderSrc, fragmentShaderSrc) {
 // Entry point to application
 async function main() {
   // Get WebGL context
-  const shaderName = "shader1";
-
-  const canvas = document.getElementById(shaderName);
+  const canvasName = "shader1";
+  const canvas = document.getElementById(canvasName);
   const gl = canvas.getContext("webgl");
-
   if (gl === null) {
     glNotSupported();
     return;
   }
 
-  // Fetch shader sources
+  // Reference to text area for changing the shader, set up CodeMirror
+  const area = document.getElementById("editor");
+  editor = CodeMirror.fromTextArea(area, {
+    lineNumbers: true,
+    mode: "x-shader/x-fragment"
+  });
+
+  // Fetch shader list
   // Do not cache
   const headers = new Headers();
   headers.append('pragma', 'no-cache');
   headers.append('cache-control', 'no-cache');
-
   const config = {
     method: 'GET',
     headers: headers
   };
 
-  // Reference to text area for changing the shader
-  const area = document.getElementById("editor");
-  editor = CodeMirror.fromTextArea(area, {
-    lineNumbers: true,
-    mode: "glsl"
-  });
-
   try {
     // Fetch default shader
-    const response = await fetch(shaderName + ".glsl", config);
+    const response = await fetch(canvasName + ".glsl", config);
     const shaderText = await response.text();
 
     // Create program, set globals

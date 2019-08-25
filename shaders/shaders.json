@@ -1,0 +1,12 @@
+{
+  "shaders": [
+    {
+      "hello_world": {
+        "displayName": "Hello world",
+        "shortDescription": "",
+        "description": "Simple hello world shader, displays a single colour.",
+        "name": "shaders/hello_world.glsl"
+      }
+    }
+  ]
+}
