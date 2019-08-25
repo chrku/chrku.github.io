@@ -11,6 +11,12 @@
       "shortDescription": "Simple shader",
       "description": "Simple hello world shader, displays a single colour.",
       "path": "shaders/hello_world_2.glsl"
+    },
+    {
+      "displayName": "Colour pulse",
+      "shortDescription": "Pulsing colour based on time",
+      "description": "This simply pulses between to constant colour values using a sine",
+      "path": "shaders/pulse.glsl"
     }
   ]
 }

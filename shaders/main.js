@@ -31,7 +31,15 @@ const squareCoords = [
   1.0, -1.0
 ];
 
+// Global variables for accessing the canvas and editor state
 let editor = null;
+let canvas = null;
+
+// Global variables for mouse position
+let mousePos = {
+  x: 0,
+  y: 0
+};
 
 // Display error if no WebGL support
 function glNotSupported() {
@@ -62,7 +70,21 @@ function glLinkError(error) {
   alert(error);
 }
 
-function drawScene(time, gl, shaderProgram, VBO) {
+// Handle canvas mouse move
+function handleMouseMoveCanvas(event, target) {
+  target = target || event.target;
+  const boundingRect = target.getBoundingClientRect();
+
+  const x = (event.clientX - boundingRect.left) * (target.width / canvas.clientWidth);
+  const y = (event.clientY - boundingRect.top) * (target.height / canvas.clientHeight);
+
+  mousePos = {
+    x,
+    y
+  }
+}
+
+function drawScene(time, gl, shaderProgram, VBO, width, height, mouseX, mouseY) {
   // Clear before drawing
   gl.clearColor(0.0, 0.0, 0.0, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
@@ -92,28 +114,39 @@ function drawScene(time, gl, shaderProgram, VBO) {
   // Use shader program
   gl.useProgram(shaderProgram);
 
-  // Set uniforms
+  // Set uniforms for the rectangle
   gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'), false, projection);
   gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, 'uViewMatrix'), false, view);
   gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, 'uModelMatrix'), false, model);
+
+  // Set other uniforms
+  // Mouse
+  gl.uniform2f(gl.getUniformLocation(shaderProgram, 'u_mouse'), mouseX, mouseY);
+  // Resolution
+  gl.uniform2f(gl.getUniformLocation(shaderProgram, 'u_resolution'), width, height);
+  // Time
+  gl.uniform1f(gl.getUniformLocation(shaderProgram, 'u_time'), time);
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
 
 // This is called each frame using requestAnimationFrame()
 function render(time) {
+  // Convert time to seconds
+  time *= 0.001;
   // The GL context is bound to the function
   const gl = this.glContext;
   const VBO = this.VBO;
-  // Convert time to seconds
-  time *= 0.001;
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+  updateUniformDisplay(canvasWidth, canvasHeight, mousePos, time);
 
   // Check if the shader source changed since last render
   if (shaderSourceChanged) {
     setNewShader(gl);
   }
 
-  drawScene(time, gl, currentShaderProgram, VBO);
+  drawScene(time, gl, currentShaderProgram, VBO, canvasWidth, canvasHeight, mousePos.x, mousePos.y);
 
   requestAnimationFrame(render.bind(this));
 }
@@ -192,6 +225,21 @@ function setUpSelector(shaderDescriptions, shaderSources) {
   }
 }
 
+// Update display of uniforms
+function updateUniformDisplay(width, height, mousePos, time) {
+  const widthDisplay = document.getElementById("canvas-width");
+  const heightDisplay = document.getElementById("canvas-height");
+  const mouseXDisplay = document.getElementById("mouse-x");
+  const mouseYDisplay = document.getElementById("mouse-y");
+  const timeDisplay = document.getElementById("time");
+
+  widthDisplay.textContent = width;
+  heightDisplay.textContent = height;
+  mouseXDisplay.textContent = mousePos.x.toFixed(2);
+  mouseYDisplay.textContent = mousePos.y.toFixed(2);
+  timeDisplay.textContent = time.toFixed(2);
+}
+
 // Fetch all shader sources according to description file
 async function fetchSources(shaderDescriptions) {
   // Make a promise for each source
@@ -204,8 +252,11 @@ async function fetchSources(shaderDescriptions) {
 async function main() {
   // Get WebGL context
   const CANVAS_NAME = "shader1";
-  const canvas = document.getElementById(CANVAS_NAME);
-  const gl = canvas.getContext("webgl");
+  const glCanvas = document.getElementById(CANVAS_NAME);
+  const gl = glCanvas.getContext("webgl");
+  // Set up mouse move handling to pass mouse position to canvas
+  canvas = glCanvas;
+  canvas.onmousemove = handleMouseMoveCanvas;
   if (gl === null) {
     glNotSupported();
     return;
