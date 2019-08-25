@@ -19,6 +19,8 @@ const vertexShaderSource = `
   }
 `;
 
+let fragmentShaderSource = null;
+
 // This documents the current fragment shader source
 // Since this is editable by users, it needs a flag to check if it
 // is still up to date
@@ -65,6 +67,7 @@ function setNewShader(gl) {
   const newProgram = makeNewShaderProgram(gl, vertexShaderSource, currentShaderSource);
   if (newProgram) {
     currentShaderProgram = newProgram;
+    fragmentShaderSource = currentShaderSource;
   }
   shaderSourceChanged = false;
 }
@@ -192,7 +195,25 @@ function makeNewShaderProgram(gl, vertexShaderSrc, fragmentShaderSrc) {
 
 // Display error if no WebGL support
 function glNotSupported() {
+  alert("WebGL is not supported on your device. This site will not work")
+}
 
+function resetEditor() {
+  editor.setValue(fragmentShaderSource);
+}
+
+function saveShader() {
+  const file = new Blob([editor.getValue()], {type: "x-shader/x-fragment"})
+  const a = document.createElement("a");
+  const url = URL.createObjectURL(file);
+  a.href = url;
+  a.download = "fragment.glsl";
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function () {
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }, 0);
 }
 
 // Show errors in error box
