@@ -33,21 +33,30 @@
         <label for="shader1">Preview of shader:</label>
         <canvas id="shader1" class="display-element"></canvas>
         <ul id="uniform-list">
-          <li> Canvas width: <span id="canvas-width"> </span></li>
-          <li> Canvas height: <span id="canvas-height"> </span></li>
-          <li> Mouse X: <span id="mouse-x"> </span></li>
-          <li> Mouse Y: <span id="mouse-y"> </span></li>
-          <li> Time: <span id="time"> </span></li>
+          <li> Canvas width (u_resolution.x): <span id="canvas-width"> </span></li>
+          <li> Canvas height (u_resolution.y): <span id="canvas-height"> </span></li>
+          <li> Mouse X (u_mouse.x): <span id="mouse-x"> </span></li>
+          <li> Mouse Y (u_mouse.y): <span id="mouse-y"> </span></li>
+          <li> Time (u_time): <span id="time"> </span></li>
         </ul>
       </div>
       <div class="editor-pane">
         <label for="editor">Edit shader code:</label>
         <textarea id="editor"></textarea>
-        <p id="error-display"></p>
+        <div class="editor-options">
+          <label for="error-display">Compiler errors:</label>
+          <textarea class="error-display" id="error-display" readonly></textarea>
+          <div class="editor-buttons">
+            <button id="compile-button" onClick="recompileShader()"> Compile</button>
+            <label class="recompile-switch">
+              Auto-recompile on edit
+              <input id="auto-recompile" onchange="disableCompileIfAutoRecompile()" type="checkbox">
+            </label>
+            <button> Reset</button>
+            <button> Save</button>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="option-pane">
-      <button onClick="recompileShader()"> Compile</button>
     </div>
   </main>
 </body>

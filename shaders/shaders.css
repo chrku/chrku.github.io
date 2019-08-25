@@ -1,5 +1,5 @@
 html, body {
-  height: 100%;
+  height: 98%;
   background-color: lightgrey;
 }
 
@@ -15,7 +15,11 @@ header, main {
 
 label {
   display: inline-block;
-  padding-bottom: 5px;
+  padding-bottom: 2px;
+}
+
+button, .recompile-switch {
+  margin: 2px;
 }
 
 .main-pane {
@@ -42,14 +46,25 @@ label {
   margin: auto;
 }
 
-.option-pane {
-  margin-top: 50px;
-  margin-left: auto;
-  margin-right: auto;
+.editor-options {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.error-display {
+  width: 100%;
+  height: 70px;
+  resize: none;
+  color: red;
+}
+
+.editor-buttons {
+  display: flex;
+  flex-direction: row;
 }
 
 .CodeMirror {
   width: 100%;
   height: 100%;
 }
-

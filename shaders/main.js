@@ -2,6 +2,10 @@
 // Call entry point
 window.onload = main;
 
+//
+// Globals for graphics & WebGL
+//
+
 // Vertex shader; very simple, simply do standard MVP matrix multiplication
 const vertexShaderSource = `
   attribute vec4 aVertexPosition;
@@ -31,20 +35,24 @@ const squareCoords = [
   1.0, -1.0
 ];
 
-// Global variables for accessing the canvas and editor state
-let editor = null;
-let canvas = null;
-
 // Global variables for mouse position
 let mousePos = {
   x: 0,
   y: 0
 };
 
-// Display error if no WebGL support
-function glNotSupported() {
 
-}
+//
+// Globals for UI
+//
+
+// Global variables for accessing the canvas and editor state
+let editor = null;
+let canvas = null;
+
+//
+// Functions for graphics & WebGL
+//
 
 // Recompile shader
 function recompileShader() {
@@ -59,29 +67,6 @@ function setNewShader(gl) {
     currentShaderProgram = newProgram;
   }
   shaderSourceChanged = false;
-}
-
-// Display error if shader could not be compiled
-function glShaderCompileError(error) {
-  alert(error);
-}
-
-function glLinkError(error) {
-  alert(error);
-}
-
-// Handle canvas mouse move
-function handleMouseMoveCanvas(event, target) {
-  target = target || event.target;
-  const boundingRect = target.getBoundingClientRect();
-
-  const x = (event.clientX - boundingRect.left) * (target.width / canvas.clientWidth);
-  const y = (event.clientY - boundingRect.top) * (target.height / canvas.clientHeight);
-
-  mousePos = {
-    x,
-    y
-  }
 }
 
 function drawScene(time, gl, shaderProgram, VBO, width, height, mouseX, mouseY) {
@@ -137,8 +122,8 @@ function render(time) {
   // The GL context is bound to the function
   const gl = this.glContext;
   const VBO = this.VBO;
-  const canvasWidth = canvas.width;
-  const canvasHeight = canvas.height;
+  const canvasWidth = canvas.scrollWidth;
+  const canvasHeight = canvas.scrollHeight;
   updateUniformDisplay(canvasWidth, canvasHeight, mousePos, time);
 
   // Check if the shader source changed since last render
@@ -178,6 +163,9 @@ function initBuffer(gl) {
 }
 
 function makeNewShaderProgram(gl, vertexShaderSrc, fragmentShaderSrc) {
+  // Reset any errors
+  resetErrorBox();
+
   const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vertexShaderSrc);
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSrc);
 
@@ -197,6 +185,51 @@ function makeNewShaderProgram(gl, vertexShaderSrc, fragmentShaderSrc) {
     return shaderProgram;
   }
 }
+
+//
+// Functions for the UI
+//
+
+// Display error if no WebGL support
+function glNotSupported() {
+
+}
+
+// Show errors in error box
+function addError(error) {
+  const errorBox = document.getElementById("error-display");
+  errorBox.value = errorBox.value + "\n" + error;
+}
+
+// Reset error box
+function resetErrorBox() {
+  const errorBox = document.getElementById("error-display");
+  errorBox.value = '';
+}
+
+// Display error if shader could not be compiled
+function glShaderCompileError(error) {
+  addError(error);
+}
+
+function glLinkError(error) {
+  addError(error);
+}
+
+// Handle canvas mouse move
+function handleMouseMoveCanvas(event, target) {
+  target = target || event.target;
+  const boundingRect = target.getBoundingClientRect();
+
+  const x = (event.clientX - boundingRect.left) * (target.width / canvas.clientWidth);
+  const y = (event.clientY - boundingRect.top) * (target.height / canvas.clientHeight);
+
+  mousePos = {
+    x,
+    y
+  }
+}
+
 
 // Set up combo box for selecting shader
 function setUpSelector(shaderDescriptions, shaderSources) {
@@ -248,6 +281,13 @@ async function fetchSources(shaderDescriptions) {
   return Promise.all(promises)
 }
 
+// Disable compile button if auto-recompile is enabled
+function disableCompileIfAutoRecompile() {
+  const compileButton = document.getElementById("compile-button");
+  const checkBox = document.getElementById("auto-recompile");
+  compileButton.disabled = checkBox.checked;
+}
+
 // Entry point to application
 async function main() {
   // Get WebGL context
@@ -268,6 +308,15 @@ async function main() {
     lineNumbers: true,
     mode: "x-shader/x-fragment"
   });
+  // Auto-recompile if configured
+  editor.on("change", () => {
+    const checkBox = document.getElementById("auto-recompile");
+    if (checkBox.checked) {
+      recompileShader();
+    }
+  });
+  // Disable compile button if checkbox is checked
+  disableCompileIfAutoRecompile();
 
   // Fetch shader list headers
   // Do not cache
@@ -279,7 +328,8 @@ async function main() {
     headers: headers
   };
 
-  // Try to fetch list of shaders that are available from server
+  // Try to fetch list of shaders that are available from server,
+  // then start rendering loop
   try {
     const SHADER_LIST_NAME = "shaders.json";
     const response = await fetch(SHADER_LIST_NAME, config);
