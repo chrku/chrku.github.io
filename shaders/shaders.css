@@ -1,5 +1,5 @@
 html, body {
-  height: 98%;
+  height: 95%;
   background-color: lightgrey;
   font-family: Helvetica, sans-serif;
 }
@@ -29,6 +29,13 @@ button, .recompile-switch {
   margin: 2px;
 }
 
+footer {
+  position: fixed;
+  bottom: 2px;
+  width: 100%;
+  text-align: center;
+}
+
 .main-pane {
   display: flex;
   flex-direction: row;
@@ -43,7 +50,22 @@ button, .recompile-switch {
 
 .display-element {
   width: 100%;
-  height: 100%;
+  height: 90%;
+}
+
+.shader-selector {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.combobox {
+  width: 85%;
+  margin: auto;
+}
+
+.random-button {
+  margin: auto;
 }
 
 .editor-pane {
@@ -61,7 +83,7 @@ button, .recompile-switch {
 
 .error-display {
   width: 100%;
-  height: 70px;
+  height: 60px;
   resize: none;
   color: red;
 }
@@ -73,5 +95,6 @@ button, .recompile-switch {
 
 .CodeMirror {
   width: 100%;
-  height: 100%;
+  height: 260px;
+  resize: none;
 }

@@ -43,6 +43,7 @@ let mousePos = {
   y: 0
 };
 
+let shaderSources = [];
 
 //
 // Globals for UI
@@ -216,6 +217,16 @@ function saveShader() {
   }, 0);
 }
 
+function selectRandom() {
+  const comboBox = document.getElementById("shader-selector");
+  const numOptions = comboBox.options.length;
+
+  const index = Math.floor((Math.random() * numOptions));
+  comboBox.selectedIndex = index;
+  editor.setValue(shaderSources[index]);
+  recompileShader();
+}
+
 // Show errors in error box
 function addError(error) {
   const errorBox = document.getElementById("error-display");
@@ -251,7 +262,6 @@ function handleMouseMoveCanvas(event, target) {
   }
 }
 
-
 // Set up combo box for selecting shader
 function setUpSelector(shaderDescriptions, shaderSources) {
   const descriptionArray = shaderDescriptions.shaders;
@@ -261,10 +271,6 @@ function setUpSelector(shaderDescriptions, shaderSources) {
     const description = descriptionArray[index];
     const option = document.createElement('option');
 
-    // Default selection if index == 0
-    if (index === 0)
-      option.selected = true;
-
     option.text = description.displayName + ": " + description.shortDescription;
     option.value = String(index);
 
@@ -273,10 +279,12 @@ function setUpSelector(shaderDescriptions, shaderSources) {
 
   comboBox.onchange = (event) => {
     const index = event.target.value;
-    console.log(index);
     editor.setValue(shaderSources[index]);
     recompileShader();
-  }
+  };
+
+  // Initially select a random value
+  selectRandom();
 }
 
 // Update display of uniforms
@@ -359,13 +367,10 @@ async function main() {
     // If successful, fetch all fragment shader sources and set up the selection combo-box
     const shaderSourceResponses = await fetchSources(shaderDescriptions);
     const textPromises = shaderSourceResponses.map((response) => response.text());
-    const shaderSources = await Promise.all(textPromises);
+    shaderSources = await Promise.all(textPromises);
 
     // Set up shader selector combo box, default value 0
     setUpSelector(shaderDescriptions, shaderSources);
-
-    // Set canvas text to shader
-    editor.setValue(shaderSources[0]);
 
     // Create program, set globals
     currentShaderProgram = makeNewShaderProgram(gl, vertexShaderSource, shaderSources[0]);

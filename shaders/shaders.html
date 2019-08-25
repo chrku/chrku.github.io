@@ -13,20 +13,28 @@
   <script src="main.js"></script>
   <!-- Title and description of the app go here-->
   <header>
-    <h1>Some of my fragment shaders</h1>
+    <h1>Fragment Shaders</h1>
     <p>
       This is a little showcase I made to show some fragment shaders I wrote; most of them
-      solutions for exercises for the excellent <a href="https://thebookofshaders.com">Book of Shaders </a>.
+      solutions for exercises for the excellent <a href="https://thebookofshaders.com">Book of Shaders</a>.
       <br/>
       The shaders are rendered using WebGL and Javascript; I also use the glmatrix library for linear algebra.
       <br/>
-      The code is editable live and the preview will be updated once the Compile button below is activated.
-      A view below the preview shows uniforms and their values.
+      The code is editable live and the preview will be updated once the compile button below is activated,
+      or if auto-recompile is enabled, whenever the code is edited. Reset resets to the last successfully compiled
+      code. Save saves the fragment shader as a GLSL file on the harddrive.
+      <br/>
+      A view below the preview shows uniforms and their values: <code>u_time: float</code> is the time since page load.
+      <code>u_mouse: vec2</code> is the mouse position on the canvas. <code>u_resolution: vec2</code> is the canvas
+      resolution.
     </p>
   </header>
   <main>
     <label for="shader-selector">Select the fragment shader to be showcased:</label>
-    <select id="shader-selector"> </select>
+    <div class="shader-selector">
+      <select class="combobox" id="shader-selector"> </select>
+      <button class="random-button" onclick="selectRandom()"> Choose random</button>
+    </div>
     <p id="description"></p>
     <div class="main-pane">
       <div class="preview-pane">
@@ -59,5 +67,8 @@
       </div>
     </div>
   </main>
+  <footer>
+    <a href="https://chrku.github.io/"> Home </a>
+  </footer>
 </body>
 </html>
