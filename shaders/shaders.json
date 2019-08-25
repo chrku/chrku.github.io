@@ -1,12 +1,16 @@
 {
   "shaders": [
     {
-      "hello_world": {
-        "displayName": "Hello world",
-        "shortDescription": "",
-        "description": "Simple hello world shader, displays a single colour.",
-        "name": "shaders/hello_world.glsl"
-      }
+      "displayName": "Hello world",
+      "shortDescription": "Simple shader",
+      "description": "Simple hello world shader, displays a single colour.",
+      "path": "shaders/hello_world.glsl"
+    },
+    {
+      "displayName": "Hello world 2",
+      "shortDescription": "Simple shader",
+      "description": "Simple hello world shader, displays a single colour.",
+      "path": "shaders/hello_world_2.glsl"
     }
   ]
 }

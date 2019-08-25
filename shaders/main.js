@@ -43,6 +43,16 @@ function recompileShader() {
   shaderSourceChanged = true;
 }
 
+function setNewShader(gl) {
+  // Try recompiling new shaders
+  const currentShaderSource = editor.getValue();
+  const newProgram = makeNewShaderProgram(gl, vertexShaderSource, currentShaderSource);
+  if (newProgram) {
+    currentShaderProgram = newProgram;
+  }
+  shaderSourceChanged = false;
+}
+
 // Display error if shader could not be compiled
 function glShaderCompileError(error) {
   alert(error);
@@ -100,13 +110,7 @@ function render(time) {
 
   // Check if the shader source changed since last render
   if (shaderSourceChanged) {
-    // Try recompiling new shaders
-    const currentShaderSource = editor.getValue();
-    const newProgram = makeNewShaderProgram(gl, vertexShaderSource, currentShaderSource);
-    if (newProgram) {
-      currentShaderProgram = newProgram;
-    }
-    shaderSourceChanged = false;
+    setNewShader(gl);
   }
 
   drawScene(time, gl, currentShaderProgram, VBO);
@@ -161,11 +165,46 @@ function makeNewShaderProgram(gl, vertexShaderSrc, fragmentShaderSrc) {
   }
 }
 
+// Set up combo box for selecting shader
+function setUpSelector(shaderDescriptions, shaderSources) {
+  const descriptionArray = shaderDescriptions.shaders;
+  const comboBox = document.getElementById("shader-selector");
+
+  for (let index = 0; index < descriptionArray.length; ++index) {
+    const description = descriptionArray[index];
+    const option = document.createElement('option');
+
+    // Default selection if index == 0
+    if (index === 0)
+      option.selected = true;
+
+    option.text = description.displayName + ": " + description.shortDescription;
+    option.value = String(index);
+
+    comboBox.add(option, index);
+  }
+
+  comboBox.onchange = (event) => {
+    const index = event.target.value;
+    console.log(index);
+    editor.setValue(shaderSources[index]);
+    recompileShader();
+  }
+}
+
+// Fetch all shader sources according to description file
+async function fetchSources(shaderDescriptions) {
+  // Make a promise for each source
+  const descriptionArray = shaderDescriptions.shaders;
+  const promises = descriptionArray.map((description) => fetch(description.path));
+  return Promise.all(promises)
+}
+
 // Entry point to application
 async function main() {
   // Get WebGL context
-  const canvasName = "shader1";
-  const canvas = document.getElementById(canvasName);
+  const CANVAS_NAME = "shader1";
+  const canvas = document.getElementById(CANVAS_NAME);
   const gl = canvas.getContext("webgl");
   if (gl === null) {
     glNotSupported();
@@ -179,7 +218,7 @@ async function main() {
     mode: "x-shader/x-fragment"
   });
 
-  // Fetch shader list
+  // Fetch shader list headers
   // Do not cache
   const headers = new Headers();
   headers.append('pragma', 'no-cache');
@@ -189,13 +228,25 @@ async function main() {
     headers: headers
   };
 
+  // Try to fetch list of shaders that are available from server
   try {
-    // Fetch default shader
-    const response = await fetch(canvasName + ".glsl", config);
-    const shaderText = await response.text();
+    const SHADER_LIST_NAME = "shaders.json";
+    const response = await fetch(SHADER_LIST_NAME, config);
+    const shaderDescriptions = await response.json();
+
+    // If successful, fetch all fragment shader sources and set up the selection combo-box
+    const shaderSourceResponses = await fetchSources(shaderDescriptions);
+    const textPromises = shaderSourceResponses.map((response) => response.text());
+    const shaderSources = await Promise.all(textPromises);
+
+    // Set up shader selector combo box, default value 0
+    setUpSelector(shaderDescriptions, shaderSources);
+
+    // Set canvas text to shader
+    editor.setValue(shaderSources[0]);
 
     // Create program, set globals
-    currentShaderProgram = makeNewShaderProgram(gl, vertexShaderSource, shaderText);
+    currentShaderProgram = makeNewShaderProgram(gl, vertexShaderSource, shaderSources[0]);
 
     // Create VBO for default object (this won't change)
     const VBO = initBuffer(gl);
@@ -205,9 +256,6 @@ async function main() {
       glContext: gl,
       VBO: VBO
     }));
-
-    // Set canvas text to shader
-    editor.setValue(shaderText);
   } catch (error) {
     console.log(error);
   }
