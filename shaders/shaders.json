@@ -2,13 +2,8 @@
   "shaders": [
     {
       "displayName": "Hello world",
-      "shortDescription": "Simple shader",
+      "shortDescription": "Simple shader, displays a fixed color",
       "path": "shaders/hello_world.glsl"
-    },
-    {
-      "displayName": "Hello world 2",
-      "shortDescription": "Simple shader",
-      "path": "shaders/hello_world_2.glsl"
     },
     {
       "displayName": "Colour pulse",
@@ -29,6 +24,16 @@
       "displayName": "Moving sine",
       "shortDescription": "Display a moving sine curve, with adjustable frequency and phase shift",
       "path": "shaders/sine.glsl"
+    },
+    {
+      "displayName": "Square wave",
+      "shortDescription": "Display a moving square wave curve, with adjustable frequency and phase shift",
+      "path": "shaders/square_wave.glsl"
+    },
+    {
+      "displayName": "Parabolas",
+      "shortDescription": "This includes some code to draw a parabola through 3 points, alongside a demonstration",
+      "path": "shaders/parabola.glsl"
     }
   ]
 }

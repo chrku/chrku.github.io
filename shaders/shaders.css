@@ -38,7 +38,14 @@ footer {
 
 .main-pane {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+}
+
+@media (min-width: 1000px) {
+  .main-pane {
+    display: flex;
+    flex-direction: row;
+  }
 }
 
 .preview-pane {
