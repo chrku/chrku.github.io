@@ -110,7 +110,7 @@ function drawScene(time, gl, shaderProgram, VBO, width, height, mouseX, mouseY) 
 
   // Set other uniforms
   // Mouse
-  gl.uniform2f(gl.getUniformLocation(shaderProgram, 'u_mouse'), mouseX, mouseY);
+  gl.uniform2f(gl.getUniformLocation(shaderProgram, 'u_mouse'), mouseX, height - mouseY);
   // Resolution
   gl.uniform2f(gl.getUniformLocation(shaderProgram, 'u_resolution'), width, height);
   // Time
@@ -126,8 +126,8 @@ function render(time) {
   // The GL context is bound to the function
   const gl = this.glContext;
   const VBO = this.VBO;
-  const canvasWidth = canvas.scrollWidth;
-  const canvasHeight = canvas.scrollHeight;
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
   updateUniformDisplay(canvasWidth, canvasHeight, mousePos, time);
 
   // Check if the shader source changed since last render

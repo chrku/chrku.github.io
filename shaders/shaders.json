@@ -17,6 +17,12 @@
       "shortDescription": "Pulsing colour based on time",
       "description": "This simply pulses between to constant colour values using a sine",
       "path": "shaders/pulse.glsl"
+    },
+    {
+      "displayName": "Mouse Effect",
+      "shortDescription": "Effect based on distance to mouse",
+      "description": "Computes an effect based off of the distance to the mouse",
+      "path": "shaders/mouse.glsl"
     }
   ]
 }
