@@ -3,26 +3,32 @@
     {
       "displayName": "Hello world",
       "shortDescription": "Simple shader",
-      "description": "Simple hello world shader, displays a single colour.",
       "path": "shaders/hello_world.glsl"
     },
     {
       "displayName": "Hello world 2",
       "shortDescription": "Simple shader",
-      "description": "Simple hello world shader, displays a single colour.",
       "path": "shaders/hello_world_2.glsl"
     },
     {
       "displayName": "Colour pulse",
       "shortDescription": "Pulsing colour based on time",
-      "description": "This simply pulses between to constant colour values using a sine",
       "path": "shaders/pulse.glsl"
     },
     {
       "displayName": "Mouse Effect",
       "shortDescription": "Effect based on distance to mouse",
-      "description": "Computes an effect based off of the distance to the mouse",
       "path": "shaders/mouse.glsl"
+    },
+    {
+      "displayName": "Straight line",
+      "shortDescription": "Display a straight line",
+      "path": "shaders/line.glsl"
+    },
+    {
+      "displayName": "Moving sine",
+      "shortDescription": "Display a moving sine curve, with adjustable frequency and phase shift",
+      "path": "shaders/sine.glsl"
     }
   ]
 }
