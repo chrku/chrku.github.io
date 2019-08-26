@@ -55,10 +55,11 @@
           <label for="error-display">Compiler errors:</label>
           <textarea class="error-display" id="error-display" readonly></textarea>
           <div class="editor-buttons">
-            <button id="compile-button" onClick="recompileShader()"> Compile</button>
+            <button id="compile-button" onclick="recompileShader()"> Compile</button>
             <label class="recompile-switch">
               Auto-recompile on edit
-              <input id="auto-recompile" onchange="disableCompileIfAutoRecompile()" type="checkbox">
+              <input id="auto-recompile" onchange="disableCompileIfAutoRecompile()" onclick="recompileShader()"
+                     type="checkbox">
             </label>
             <button onClick="resetEditor()"> Reset</button>
             <button onClick="saveShader()"> Save</button>
