@@ -16,5 +16,5 @@ float getDistanceToMouse() {
 }
 
 void main() {
-  gl_FragColor = vec4(abs(sin(getDistanceToMouse() * u_time)), 0.5, 0.3, 1.0);
+  gl_FragColor = vec4(abs(sin(getDistanceToMouse() * mod(u_time, 100.0))), 0.5, 0.3, 1.0);
 }

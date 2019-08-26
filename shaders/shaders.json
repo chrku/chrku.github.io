@@ -34,6 +34,11 @@
       "displayName": "Parabolas",
       "shortDescription": "This includes some code to draw a parabola through 3 points, alongside a demonstration",
       "path": "shaders/parabola.glsl"
+    },
+    {
+      "displayName": "Moving rainbow",
+      "shortDescription": "Creates a rainbow spectrum of colours and animates it",
+      "path": "shaders/rainbow.glsl"
     }
   ]
 }
