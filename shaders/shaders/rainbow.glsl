@@ -47,7 +47,6 @@ float interpolateBetweenFall(float a, float b, float c, float d, float x) {
   return (1.0 - mix(d, c, (x - a) * (c - d) / (b - a))) * activeBetween(a, b, x);
 }
 
-
 void main() {
   vec2 normalizedFragCoord = getNormalizedFragCoord();
   float x = renormalized_sine(normalizedFragCoord.x, u_time, 1.5, 1.0);

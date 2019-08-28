@@ -39,6 +39,11 @@
       "displayName": "Moving rainbow",
       "shortDescription": "Creates a rainbow spectrum of colours and animates it",
       "path": "shaders/rainbow.glsl"
+    },
+    {
+      "displayName": "Color wheel",
+      "shortDescription": "Creates a spinning color wheel animation using the HSV color space",
+      "path": "shaders/colour_wheel.glsl"
     }
   ]
 }

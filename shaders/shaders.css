@@ -2,11 +2,18 @@ html, body {
   height: 95%;
   background-color: lightgrey;
   font-family: Helvetica, sans-serif;
+  font-size: 1.5em;
+}
+
+@media (min-width: 700px) {
+  html, body {
+    font-size: 1em;
+  }
 }
 
 header, main {
   min-width: 600px;
-  width: 100%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   margin: auto;
@@ -30,7 +37,6 @@ button, .recompile-switch {
 }
 
 footer {
-  position: fixed;
   bottom: 2px;
   width: 100%;
   text-align: center;
@@ -50,9 +56,15 @@ footer {
 
 .preview-pane {
   padding: 5px;
-  width: 40%;
+  width: 100%;
   height: 100%;
   margin: auto;
+}
+
+@media (min-width: 1000px) {
+  .preview-pane {
+    width: 40%;
+  }
 }
 
 .display-element {
@@ -77,9 +89,22 @@ footer {
 
 .editor-pane {
   padding: 5px;
-  width: 50%;
+  width: 100%;
   height: 100%;
-  margin: auto;
+  margin-top: 300px;
+}
+
+@media (min-width: 700px) {
+  .editor-pane {
+    margin-top: 100px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .editor-pane {
+    margin: auto;
+    width: 50%;
+  }
 }
 
 .editor-options {
