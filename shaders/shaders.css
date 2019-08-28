@@ -5,7 +5,13 @@ html, body {
   font-size: 1.5em;
 }
 
-@media (min-width: 700px) {
+@media (min-width: 600px) {
+  html, body {
+    font-size: 1.2em;
+  }
+}
+
+@media (min-width: 1000px) {
   html, body {
     font-size: 1em;
   }
@@ -37,9 +43,13 @@ button, .recompile-switch {
 }
 
 footer {
-  bottom: 2px;
+  bottom: 0;
   width: 100%;
   text-align: center;
+}
+
+ul {
+  list-style-position: inside;
 }
 
 .main-pane {
@@ -55,21 +65,32 @@ footer {
 }
 
 .preview-pane {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
   padding: 5px;
   width: 100%;
-  height: 100%;
+  margin: auto;
+  overflow: auto;
+}
+
+.display-element {
+  width: 400px;
+  height: 400px;
+  margin: auto;
+}
+
+.uniform-list {
+  padding-top: 2px;
   margin: auto;
 }
 
 @media (min-width: 1000px) {
   .preview-pane {
     width: 40%;
+    height: 100%;
   }
-}
-
-.display-element {
-  width: 100%;
-  height: 90%;
 }
 
 .shader-selector {
@@ -90,20 +111,13 @@ footer {
 .editor-pane {
   padding: 5px;
   width: 100%;
-  height: 100%;
-  margin-top: 300px;
-}
-
-@media (min-width: 700px) {
-  .editor-pane {
-    margin-top: 100px;
-  }
 }
 
 @media (min-width: 1000px) {
   .editor-pane {
     margin: auto;
     width: 50%;
+    height: 100%;
   }
 }
 
@@ -115,7 +129,7 @@ footer {
 
 .error-display {
   width: 100%;
-  height: 60px;
+  height: 80px;
   resize: none;
   color: red;
 }
@@ -127,6 +141,6 @@ footer {
 
 .CodeMirror {
   width: 100%;
-  height: 260px;
+  height: 350px;
   resize: none;
 }
