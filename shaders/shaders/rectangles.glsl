@@ -40,7 +40,8 @@ void main() {
   float rect4 = rectangle_frame(vec2(0.8, 0.1 + 0.3 * sin(u_time)), vec2(0.9, 0.5 + 0.4 * sin(u_time)), 0.02, coords);
   float rect5 = rectangle_frame(vec2(0.4 + 0.2 * sin(u_time), 0.2), vec2(0.7 + 0.2 * sin(u_time), 0.4), 0.02, coords);
   float rect6 = rectangle_frame(vec2(0.1, 0.7 + 0.3 * sin(u_time)), vec2(0.5, 0.9 + 0.3 * sin(u_time)), 0.02, coords);
-  float result = clamp(rect1 + rect2 + rect3 + rect4 + rect5 + rect6, 0.0, 1.0);
 
+  // Combine results and set color
+  float result = clamp(rect1 + rect2 + rect3 + rect4 + rect5 + rect6, 0.0, 1.0);
   gl_FragColor = vec4(color * result, 1.0);
 }

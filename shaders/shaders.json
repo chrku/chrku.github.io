@@ -49,6 +49,11 @@
       "displayName": "Rectangles",
       "shortDescription": "Showcase of drawing rectangles inside a shader.",
       "path": "shaders/rectangles.glsl"
+    },
+    {
+      "displayName": "n-gons",
+      "shortDescription": "Showcase of an n-gon function that can draw arbitrary n-gons using distance fields",
+      "path": "shaders/ngons.glsl"
     }
   ]
 }
