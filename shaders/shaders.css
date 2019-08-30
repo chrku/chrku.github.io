@@ -76,9 +76,16 @@ ul {
 }
 
 .display-element {
-  width: 40vh;
-  height: 40vh;
-  margin: auto;
+  width: 55vh;
+  height: 55vh;
+}
+
+@media (min-width: 1000px) {
+  .display-element {
+    width: 40vh;
+    height: 40vh;
+    margin: auto;
+  }
 }
 
 .uniform-list {
