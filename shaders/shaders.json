@@ -59,6 +59,11 @@
       "displayName": "Slalom",
       "shortDescription": "Circles going around in a wavy pattern",
       "path": "shaders/slalom.glsl"
+    },
+    {
+      "displayName": "Mandelbrot",
+      "shortDescription": "Calculates the mandelbrot fractal and applies a colouring transformation",
+      "path": "shaders/mandelbrot.glsl"
     }
   ]
 }
