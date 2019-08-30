@@ -78,6 +78,7 @@ ul {
 .display-element {
   width: 55vh;
   height: 55vh;
+  margin: auto;
 }
 
 @media (min-width: 1000px) {
