@@ -41,7 +41,6 @@ vec3 hsv2rgb(vec3 c)
 vec3 mandelbrot(vec2 coords) {
   // Transform coordinates to -0.5 to 0.5 range
   vec2 c = vec2((coords.x * 3.5) - 2.5, (coords.y - 0.5) * 2.0);
-  // Further rescale coordinates to -2 to 2 range
   // Calculate mandelbrot fractal for a fixed amount
   // of iterations
   // We pretend that our coordinates are in the complex plane

@@ -64,6 +64,11 @@
       "displayName": "Mandelbrot",
       "shortDescription": "Calculates the mandelbrot fractal and applies a colouring transformation",
       "path": "shaders/mandelbrot.glsl"
+    },
+    {
+      "displayName": "Tiling effect",
+      "shortDescription": "Shows a simple tiling effect with some animations",
+      "path": "shaders/tiles.glsl"
     }
   ]
 }
