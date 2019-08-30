@@ -54,6 +54,11 @@
       "displayName": "n-gons",
       "shortDescription": "Showcase of an n-gon function that can draw arbitrary n-gons using distance fields",
       "path": "shaders/ngons.glsl"
+    },
+    {
+      "displayName": "Slalom",
+      "shortDescription": "Circles going around in a wavy pattern",
+      "path": "shaders/slalom.glsl"
     }
   ]
 }
