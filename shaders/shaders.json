@@ -69,6 +69,11 @@
       "displayName": "Tiling effect",
       "shortDescription": "Shows a simple tiling effect with some animations",
       "path": "shaders/tiles.glsl"
+    },
+    {
+      "displayName": "Tartan",
+      "shortDescription": "Displays a tartan-like pattern through tiling",
+      "path": "shaders/tartan.glsl"
     }
   ]
 }
