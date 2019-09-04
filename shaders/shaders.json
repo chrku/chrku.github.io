@@ -74,6 +74,11 @@
       "displayName": "Tartan",
       "shortDescription": "Displays a tartan-like pattern through tiling",
       "path": "shaders/tartan.glsl"
+    },
+    {
+      "displayName": "Offset squares",
+      "shortDescription": "Displays a moving, offset square pattern",
+      "path": "shaders/offset_squares.glsl"
     }
   ]
 }
