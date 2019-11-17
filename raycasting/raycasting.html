@@ -21,7 +21,8 @@
     then located
     at +1 in the z-direction from the camera origin and has dimensions [aspect_ratio, 1]. Then, the functions
     that define the shapes get sampled along those rays, with a step size that is defined in the shader. If a
-    threshold distance is reached, we assume a hit and calculate a color using Lambertian shading. This is all
+    threshold distance is reached, we assume a hit and calculate a color using Lambertian shading, for which
+    we need a normal vector, which we get analytically in the sphere and through the gradient in the torus. This is all
     done on the GPU.
   </p>
 </header>
