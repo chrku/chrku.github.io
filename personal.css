@@ -1,0 +1,44 @@
+html, body {
+  height: 95%;
+  background-color: lightgrey;
+  font-family: Helvetica, sans-serif;
+  font-size: 1.5em;
+}
+
+@media (min-width: 600px) {
+  html, body {
+    font-size: 1.3em;
+  }
+}
+
+@media (min-width: 1000px) {
+  html, body {
+    font-size: 1em;
+  }
+}
+
+header, main {
+  min-width: 600px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  justify-content: center;
+  align-content: center;
+}
+
+@media (min-width: 1000px) {
+  header, main {
+    width: 60%;
+  }
+}
+
+footer {
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+
+ul {
+  list-style-position: inside;
+}
