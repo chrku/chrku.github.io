@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ray casting</title>
+  <link href="raycasting.css" rel="stylesheet">
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+<script src="main.js"></script>
+<!-- Title and description of the app go here-->
+<header>
+  <h1>GPU accelerated raycasting</h1>
+  <p>
+    This shows an implementation of 3D ray-casting of scalar fields on the GPU with simple Lambertian shading.
+    Everything is calculated in a vertex shader. The shapes are defined via a signed distance function.
+    The normals for the torus are obtained by calculating the gradient using the method of finite differences and exact
+    normals are used for the sphere.
+  </p>
+</header>
+<main>
+  <div class="main-pane">
+    <div class="preview-pane">
+      <label for="shader1">Preview of shader:</label>
+      <canvas class="display-element" height="400" id="shader1" width="400"></canvas>
+    </div>
+  </div>
+</main>
+<footer>
+  <a href="https://chrku.github.io/"> Home </a>
+</footer>
+</body>
+</html>
