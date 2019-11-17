@@ -13,9 +13,16 @@
   <h1>GPU accelerated raycasting</h1>
   <p>
     This shows an implementation of 3D ray-casting of scalar fields on the GPU with simple Lambertian shading.
-    Everything is calculated in a vertex shader. The shapes are defined via a signed distance function.
+    Everything is calculated in a fragment shader. The shapes are defined via a signed distance function.
     The normals for the torus are obtained by calculating the gradient using the method of finite differences and exact
     normals are used for the sphere.
+    <br/>
+    The rays are generated assuming a camera centered at a point that is rotated around the origin. The image plane is
+    then located
+    at +1 in the z-direction from the camera origin and has dimensions [aspect_ratio, 1]. Then, the functions
+    that define the shapes get sampled along those rays, with a step size that is defined in the shader. If a
+    threshold distance is reached, we assume a hit and calculate a color using Lambertian shading. This is all
+    done on the GPU.
   </p>
 </header>
 <main>
@@ -25,6 +32,91 @@
       <canvas class="display-element" height="400" id="shader1" width="400"></canvas>
     </div>
   </div>
+  <h3> Shader code used for drawing this image</h3>
+  <pre><code>
+  #ifdef GL_ES
+  precision mediump float;
+  #endif
+
+  #define ITERATIONS 500
+  #define STEP_SIZE 0.01
+
+  uniform float u_time;
+  uniform vec2 u_resolution;
+
+  mat3 getRotationMatrixY(float angle) {
+    return mat3(cos(angle), 0.0, sin(angle),
+                0.0, 1.0, 0.0,
+                -sin(angle), 0.0, cos(angle));
+  }
+
+  vec3 cameraPosition = vec3(0.0, 0.0, 0.3);
+  float focalLength = 1.0;
+
+  vec2 getNormalizedFragCoord() {
+    vec2 normalizedFragCoords = vec2(gl_FragCoord.x / u_resolution.x,
+      gl_FragCoord.y / u_resolution.y);
+    return normalizedFragCoords;
+  }
+
+  vec3 createRay() {
+    // Get fragment coordinate
+    vec2 coord = getNormalizedFragCoord();
+    vec3 rotatedCamera = cameraPosition * getRotationMatrixY(u_time);
+    float a = u_resolution.x / u_resolution.y;
+    // Get lower left corner of viewport
+    vec3 lowerLeftCorner = rotatedCamera - vec3((a / 2.0), 0.0, 0.0)
+      - vec3(0.0, 0.5, 0.0) + vec3(0.0, 0.0, focalLength);
+    vec3 viewPortPoint = lowerLeftCorner + vec3(a * coord.x, 0.0, 0.0)
+      + vec3(0.0, coord.y, 0.0);
+    return viewPortPoint - rotatedCamera;
+  }
+
+  float sphere(vec3 origin, float radius, vec3 p) {
+    return length(origin - p) - radius;
+  }
+
+  float torus(vec3 origin, float inner, float outer, vec3 point) {
+    vec3 p = point - origin;
+    vec2 q = vec2(length(p.xz) - inner, p.y);
+    return length(q) - outer;
+  }
+
+  vec3 rayMarch(vec3 ray) {
+    vec3 rotatedCamera = cameraPosition * getRotationMatrixY(u_time);
+    for (int i = 0; i < ITERATIONS; ++i) {
+      vec3 point = rotatedCamera + STEP_SIZE * float(i) * ray;
+      // Sphere at (0.0, 0.0, 2.0)
+      vec3 sphere_origin = vec3(-0.1, -0.2, 2.0);
+      vec3 torus_origin = vec3(0.4, 0.3, 2.0);
+      if (sphere(sphere_origin, 0.3, point) <= 0.0) {
+        vec3 normal = normalize(point - sphere_origin);
+        vec3 lightDir = normalize(rotatedCamera - point);
+        return vec3(1.0, 1.0, 1.0) * clamp(dot(normal, lightDir), 0.0, 1.0);
+      }
+      if (torus(torus_origin, 0.3, 0.1, point) <= 0.0) {
+        vec3 grad = vec3(
+          (torus(torus_origin, 0.3, 0.1, point + vec3(0.001, 0.0, 0.0))
+            - torus(torus_origin, 0.3, 0.1, point - vec3(0.001, 0.0, 0.0))),
+          (torus(torus_origin, 0.3, 0.1, point + vec3(0.0, 0.001, 0.0))
+            - torus(torus_origin, 0.3, 0.1, point - vec3(0.0, 0.001, 0.0))),
+          (torus(torus_origin, 0.3, 0.1, point + vec3(0.0, 0.0, 0.001))
+            - torus(torus_origin, 0.3, 0.1, point - vec3(0.0, 0.0, 0.001))));
+        vec3 normal = normalize(grad);
+        vec3 lightDir = normalize(rotatedCamera - point);
+        return vec3(1.0, 1.0, 1.0) * clamp(dot(normal, lightDir), 0.0, 1.0);
+      }
+    }
+
+    return vec3(0.0, 0.0, 0.0);
+  }
+
+  void main() {
+    vec3 ray = createRay();
+    vec3 col = rayMarch(ray);
+    gl_FragColor = vec4(col, 1.0);
+  }
+  </code></pre>
 </main>
 <footer>
   <a href="https://chrku.github.io/"> Home </a>

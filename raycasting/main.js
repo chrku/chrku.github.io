@@ -23,13 +23,19 @@ const fragmentShaderSource = `
   precision mediump float;
   #endif
   
-  #define ITERATIONS 5000
+  #define ITERATIONS 500
   #define STEP_SIZE 0.01
   
   uniform float u_time;
   uniform vec2 u_resolution;
+ 
+  mat3 getRotationMatrixY(float angle) {
+    return mat3(cos(angle), 0.0, sin(angle),
+                0.0, 1.0, 0.0,
+                -sin(angle), 0.0, cos(angle));
+  }
   
-  vec3 cameraPosition = vec3(0.0, 0.0, 0.0);
+  vec3 cameraPosition = vec3(0.0, 0.0, 0.3);
   float focalLength = 1.0;
   
   vec2 getNormalizedFragCoord() {
@@ -41,13 +47,14 @@ const fragmentShaderSource = `
   vec3 createRay() {
     // Get fragment coordinate
     vec2 coord = getNormalizedFragCoord();
+    vec3 rotatedCamera = cameraPosition * getRotationMatrixY(u_time);
     float a = u_resolution.x / u_resolution.y;
     // Get lower left corner of viewport
-    vec3 lowerLeftCorner = cameraPosition - vec3((a / 2.0), 0.0, 0.0)
+    vec3 lowerLeftCorner = rotatedCamera - vec3((a / 2.0), 0.0, 0.0)
       - vec3(0.0, 0.5, 0.0) + vec3(0.0, 0.0, focalLength);
     vec3 viewPortPoint = lowerLeftCorner + vec3(a * coord.x, 0.0, 0.0)
       + vec3(0.0, coord.y, 0.0);
-    return viewPortPoint - cameraPosition;
+    return viewPortPoint - rotatedCamera;
   }
   
   float sphere(vec3 origin, float radius, vec3 p) {
@@ -61,14 +68,15 @@ const fragmentShaderSource = `
   }
   
   vec3 rayMarch(vec3 ray) {
+    vec3 rotatedCamera = cameraPosition * getRotationMatrixY(u_time);
     for (int i = 0; i < ITERATIONS; ++i) {
-      vec3 point = cameraPosition + STEP_SIZE * float(i) * ray;
+      vec3 point = rotatedCamera + STEP_SIZE * float(i) * ray;
       // Sphere at (0.0, 0.0, 2.0)
       vec3 sphere_origin = vec3(-0.1, -0.2, 2.0);
       vec3 torus_origin = vec3(0.4, 0.3, 2.0);
       if (sphere(sphere_origin, 0.3, point) <= 0.0) {
-        vec3 normal = normalize(sphere_origin - point);
-        vec3 lightDir = normalize(point - cameraPosition);
+        vec3 normal = normalize(point - sphere_origin);
+        vec3 lightDir = normalize(rotatedCamera - point);
         return vec3(1.0, 1.0, 1.0) * clamp(dot(normal, lightDir), 0.0, 1.0);
       }
       if (torus(torus_origin, 0.3, 0.1, point) <= 0.0) {
@@ -80,7 +88,7 @@ const fragmentShaderSource = `
           (torus(torus_origin, 0.3, 0.1, point + vec3(0.0, 0.0, 0.001)) 
             - torus(torus_origin, 0.3, 0.1, point - vec3(0.0, 0.0, 0.001))));
         vec3 normal = normalize(grad);
-        vec3 lightDir = normalize(cameraPosition - point);
+        vec3 lightDir = normalize(rotatedCamera - point);
         return vec3(1.0, 1.0, 1.0) * clamp(dot(normal, lightDir), 0.0, 1.0);
       }
     }
